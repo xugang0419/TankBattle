@@ -5,23 +5,21 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
-import com.mdy.net.Client;
-
 
 class Missile extends MyImage{
 	private int direction;
 	private final static int speed=10;
 	private final static int damage=10;
 	private int id;
-	private Game game;
+//	private Game game;
 	
-	Missile(int x,int y,int direction,int _id,Game game){
+	Missile(int x,int y,int direction,int _id){
 		super(x,y);
 		this.height=17;
 		this.width=17;
 		this.direction=direction;
 		this.id=_id;
-		this.game = game;
+//		this.game = game;
 	}
 	private synchronized boolean isMeet(){
 		for(int i=0;i<Game.wall.size();++i){
@@ -69,15 +67,15 @@ class Missile extends MyImage{
 								Game.missile.clear();
 							}
 							else{
-								if(Game.mode==4){
-									Client.delTank(Game.tank.get(i));
-									Game.tank.remove(i);
-									if(Game.tank.size()==1){
-										JOptionPane.showMessageDialog(null,"you win!!!");
-										com.mdy.main.Main.live=false;
-										Game.live=false;
-									}
-								}
+//								if(Game.mode==4){
+//									Client.delTank(Game.tank.get(i));
+//									Game.tank.remove(i);
+//									if(Game.tank.size()==1){
+//										JOptionPane.showMessageDialog(null,"you win!!!");
+//										com.mdy.main.Main.live=false;
+//										Game.live=false;
+//									}
+//								}
 							}
 						}
 						else{

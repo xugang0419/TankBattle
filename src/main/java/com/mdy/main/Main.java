@@ -1,12 +1,21 @@
 package com.mdy.main;
 
 
-import com.mdy.game.Game;
-import com.mdy.net.Client;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
+import com.mdy.game.Game;
 
 /**
  * 选择模式界面，主界面
@@ -15,8 +24,6 @@ public class Main extends JFrame {
 
     private JFrame play;
     private Game game = null;
-    private com.mdy.net.Server server;
-    private Client client;
     public static boolean live;
 	private static int PlayTime=0;
 
@@ -41,9 +48,9 @@ public class Main extends JFrame {
 		if(mode<4){
 			game = new Game(mode);
 		}
-		else if(mode==4){
-			game = new Game(mode, client.socket);
-		}
+//		else if(mode==4){
+//			game = new Game(mode, client.socket);
+//		}
 		play.setContentPane(game);
 		play.setBounds(game.getBounds());
 		play.setVisible(true);
@@ -86,13 +93,6 @@ public class Main extends JFrame {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}
-			}
-			if(client !=null){
-				try {
-					client.socket.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
 				}
 			}
 			play.dispose();
@@ -139,37 +139,6 @@ public class Main extends JFrame {
 		btnNewButton_1.setBorderPainted(false);
 		btnNewButton_1.addActionListener(e -> play(2));
 		panel.add(btnNewButton_1);
-
-		JButton btnNewButton_2 = new JButton("NetBattle");
-		btnNewButton_2.setEnabled(true);
-		btnNewButton_2.addActionListener(arg0 -> {
-            JDialog jd = new JDialog();
-            jd.setBounds((getBounds().width-250),(getBounds().height-250) , 250, 250);
-            jd.setVisible(true);
-            JButton jb1 = new JButton("服务端");
-            JButton jb2 = new JButton("客户端");
-            jd.setLayout(new GridLayout(1,2,0,0));
-            jd.add(jb1);
-            jd.add(jb2);
-            jb1.addActionListener(arg01 -> {
-                try {
-                    server = new com.mdy.net.Server();
-                    play(3);
-                    new Thread(server).start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            jb2.addActionListener(e -> {
-                try {
-                    client = new Client();
-                    play(4);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            });
-        });
-		btnNewButton_2.setBounds(224, 352 , 144, 34);
-		panel.add(btnNewButton_2);
+		
 	}
 }

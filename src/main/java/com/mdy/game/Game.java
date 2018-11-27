@@ -1,9 +1,10 @@
 package com.mdy.game;
 
-import com.mdy.net.Server;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -12,6 +13,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+
+import javax.swing.JPanel;
 
 
 /**
@@ -146,14 +149,15 @@ public class Game extends JPanel {
                             writer.println(Integer.toString(key));
                         }
                         if(mode==3){
-                            for(Socket s:Server.getSocket()){
-                                try {
-                                    writer = new PrintWriter(s.getOutputStream(),true);
-                                    writer.println("server"+" "+String.valueOf(key));
-                                } catch (IOException e1) {
-                                    e1.printStackTrace();
-                                }
-                            }
+                        	System.out.println("坦克mode = 3");
+//                            for(Socket s:Server.getSocket()){
+//                                try {
+//                                    writer = new PrintWriter(s.getOutputStream(),true);
+//                                    writer.println("server"+" "+String.valueOf(key));
+//                                } catch (IOException e1) {
+//                                    e1.printStackTrace();
+//                                }
+//                            }
                         }
                     }
                 }
@@ -251,28 +255,7 @@ public class Game extends JPanel {
     }
 
 
-    /**
-     * 发送按键到服务器的进程
-     */
-    class send implements Runnable{
-        public void run(){
-            while(live){
-                for(Socket s:Server.getSocket()){
-                    try {
-                        writer = new PrintWriter(s.getOutputStream(),true);
-                        writer.println("server"+" "+String.valueOf(MyTank.getFirst().x)+" "+String.valueOf(MyTank.getFirst().y)+" "+String.valueOf(MyTank.getFirst()._direction));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+    
 
     /**
      * 重绘函数
@@ -337,9 +320,9 @@ public class Game extends JPanel {
         new Thread(new Draw()).start();
         if(mode==1)
             init_ETank();
-        if(mode==3){
-            new Thread(new send()).start();
-        }
+//        if(mode==3){
+//            new Thread(new send()).start();
+//        }
     }
 
     public Game(int mode,Socket socket) {
