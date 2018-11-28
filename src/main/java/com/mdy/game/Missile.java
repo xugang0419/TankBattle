@@ -5,12 +5,13 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
-
+/** 子弹类 */
 class Missile extends MyImage{
+	
 	private int direction;
 	private final static int speed=10;
 	private final static int damage=10;
-	private int id;
+	private int id;//坦克id，判断这个子弹是谁射出的
 //	private Game game;
 	
 	Missile(int x,int y,int direction,int _id){
@@ -31,12 +32,14 @@ class Missile extends MyImage{
 			}
 		}
 		for(int i=0;i<Game.tank.size();++i){
-			if(Game.tank.get(i).isIntersects(this)){
+			if(Game.tank.get(i).isIntersects(this)){//如果子弹遇到坦克：
 				if(id!=Game.tank.get(i).id){
 					Game.tank.get(i).hp-=damage;
 				}
 				if(Game.tank.get(i).hp<=0){
-					if(Game.tank.get(i).id<12){
+					System.out.println("坦克"+i+"血量为"+Game.tank.get(i).hp);
+					if(Game.tank.get(i).id<12){//敌人 0，4，8 | 队友 12，16
+						//敌人血量低于0
 						Collection<Tank> coil = Game.ETank.values();
 						Iterator<Tank> it = coil.iterator();
 						while(it.hasNext()){
@@ -48,12 +51,11 @@ class Missile extends MyImage{
 								break;
 							}
 						}
-
-					}
-					else{
+					}else{
+						//自己或队友血量低于0时:
 						Game.tank.get(i).flag=false;
-						if(Game.mode!=3){
-							if(Game.tank.get(i).equals(Game.MyTank.getFirst())){
+						if(Game.mode!=3){// 3指的是AI
+							if(Game.tank.get(i).equals(Game.MyTank.getFirst())){//1P 坦克死了
 								Game.live=false;
 								com.mdy.main.Main.live=false;
 								for (Tank aTank : Game.tank) {
@@ -65,12 +67,15 @@ class Missile extends MyImage{
 								Game.tank.clear();
 								Game.wall.clear();
 								Game.missile.clear();
+							}else{
+								System.out.println("2P 坦克死了");
+								
+								Game.MyTank.remove(1);//去除2P
+								Game.tank.remove(i);//从坦克列表中去除
+								
 							}
-							else{
-								System.out.println("网络对战？？");
-							}
-						}
-						else{
+						}else{
+							
 							Game.tank.remove(i);
 							if(Game.tank.size()==1){
 								JOptionPane.showMessageDialog(null,String.valueOf(Game.tank.getFirst().id)+"win!!");

@@ -7,9 +7,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -61,23 +59,17 @@ public class Game extends JPanel {
     volatile static LinkedList<Wall> wall = new LinkedList<>();
 
     public static LinkedList<Tank> MyTank = new LinkedList<>();
-    public static LinkedList<Tank> tank = new LinkedList<>();
+    public static LinkedList<Tank> tank = new LinkedList<>();//所有坦克(我方+敌方)
     static Map<Integer,Tank> ETank = new HashMap<>();
-    //客户端的坦克
-    public static Map<String,Tank> CNetTank = new HashMap<>();
-    //服务端的坦克
-    static LinkedList<Tank> NetTank = new LinkedList<>();
 
 
-    /**
-     * 重画线程
-     */
+    /** 重画(刷新)线程-repaint */
     class Draw implements Runnable{
         public void run() {
             while(live){
                 repaint();
                 try {
-                    Thread.sleep(2);
+                    Thread.sleep(25);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -85,9 +77,7 @@ public class Game extends JPanel {
         }
     }
 
-    /**
-     * 子弹移动的线程
-     */
+    /** 子弹移动-线程 */
     class MissileMove implements Runnable{
         public void run() {
             while(live){
@@ -101,7 +91,7 @@ public class Game extends JPanel {
                     }
                 }
                 try {
-                    Thread.sleep(3);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -121,8 +111,7 @@ public class Game extends JPanel {
                     MyTank.getFirst().key=key;
                     MyTank.getFirst().move=true;
                 }
-            }
-            else{
+            }else{
                 if(key!=KeyEvent.VK_G&&!MyTank.isEmpty()){
                     switch (key){
                         case KeyEvent.VK_W:key = KeyEvent.VK_UP;break;
@@ -142,20 +131,17 @@ public class Game extends JPanel {
                 if(!MyTank.isEmpty()){
                     if(key!=KeyEvent.VK_SHIFT&&key==MyTank.getFirst().key){
                         MyTank.getFirst().move=false;
-                    }
-                    else{
+                    }else{
                         MyTank.getFirst().GetKey(key);
                         if(mode==4){
                             writer.println(Integer.toString(key));
                         }
                         if(mode==3){
                         	System.out.println("坦克mode = 3");
-
                         }
                     }
                 }
-            }
-            else{
+            }else{
                 switch (key){
                     case KeyEvent.VK_W:key = KeyEvent.VK_UP;break;
                     case KeyEvent.VK_A:key = KeyEvent.VK_LEFT;break;
@@ -166,8 +152,7 @@ public class Game extends JPanel {
                 if(!MyTank.isEmpty()){
                     if(key!=KeyEvent.VK_SHIFT&&key==MyTank.getLast().key){
                         MyTank.getLast().move=false;
-                    }
-                    else{
+                    }else{
                         MyTank.getLast().GetKey(key);
                         if(mode==4){
                             writer.println(Integer.toString(key));
@@ -207,19 +192,14 @@ public class Game extends JPanel {
     }
 
     private static void init_Tank(int mode){
-        if(mode==4){
-            Tank p1 = new Tank(300,100,DOWN,play1,0);
-            p1.speed=20;
-            tank.add(p1);
-            MyTank.add(p1);
-            return;
-        }
-        Tank p1 = new Tank(600,100,DOWN,play2,0);
+        Tank p1 = new Tank(600,100,DOWN,play1,0);
         p1.speed=20;
+        p1.hp = 3000;
+        p1.mp = 3000;
         tank.add(p1);
         MyTank.add(p1);
         if(mode==2){
-            Tank p2 = new Tank(300,100,DOWN,play1,0);
+            Tank p2 = new Tank(300,100,DOWN,play2,0);
             p2.speed=20;
             tank.add(p2);
             MyTank.add(p2);
@@ -261,12 +241,6 @@ public class Game extends JPanel {
         for (Wall aWall : wall) {
             g2.drawImage(array[aWall.id], aWall.x, aWall.y, null);
         }
-        //联机模式
-        if(mode==4){
-            //writer = new PrintWriter(socket.getOutputStream(),true);
-            writer.println(String.valueOf(MyTank.getFirst().x)+" "+String.valueOf(MyTank.getFirst().y)+" "+String.valueOf(MyTank.getFirst()._direction));
-            //writer.close();
-        }
 
         //画坦克的身体
         for (Tank aTank : tank) {
@@ -285,8 +259,10 @@ public class Game extends JPanel {
                 g2.drawImage(array[22],missile.get(i).x,missile.get(i).y,null);
         }
     }
-
+    
+    @Override
     synchronized public void update(Graphics g) {
+    	System.out.println("画");
         super.update(g);
         if(OffScreenImage == null)
             OffScreenImage = this.createImage(screenWidth, screenHeight);
@@ -313,9 +289,6 @@ public class Game extends JPanel {
         new Thread(new Draw()).start();
         if(mode==1)
             init_ETank();//初始化敌人的坦克
-//        if(mode==3){
-//            new Thread(new send()).start();
-//        }
     }
     
 }

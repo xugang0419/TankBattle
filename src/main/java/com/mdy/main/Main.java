@@ -21,8 +21,9 @@ import com.mdy.game.Game;
  * 选择模式界面，主界面
  */
 public class Main extends JFrame {
-
-    private JFrame play;
+	private static final long serialVersionUID = 7108333676029034947L;
+	
+	private JFrame play;
     private Game game = null;
     public static boolean live;
 	private static int PlayTime=0;
@@ -45,12 +46,8 @@ public class Main extends JFrame {
 		live=true;
 		play.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(false);
-		if(mode<4){
-			game = new Game(mode);
-		}
-//		else if(mode==4){
-//			game = new Game(mode, client.socket);
-//		}
+		
+		game = new Game(mode);
 		play.setContentPane(game);
 		play.setBounds(game.getBounds());
 		play.setVisible(true);
@@ -59,32 +56,7 @@ public class Main extends JFrame {
 		new Thread(new CheckLive()).start();
 	}
 
-    private void init_image(){
-		Game.array[0] = new ImageIcon(Main.class.getResource("/img/walls.gif")).getImage();
-		Game.array[1] = new ImageIcon(Main.class.getResource("/img/steels.gif")).getImage();
-		Game.array[2] = new ImageIcon(Main.class.getResource("/img/enemy1D.gif")).getImage();
-		Game.array[3] = new ImageIcon(Main.class.getResource("/img/enemy1L.gif")).getImage();
-		Game.array[4] = new ImageIcon(Main.class.getResource("/img/enemy1R.gif")).getImage();
-		Game.array[5] = new ImageIcon(Main.class.getResource("/img/enemy1U.gif")).getImage();
-		Game.array[6] = new ImageIcon(Main.class.getResource("/img/enemy2D.gif")).getImage();
-		Game.array[7] = new ImageIcon(Main.class.getResource("/img/enemy2L.gif")).getImage();
-		Game.array[8] = new ImageIcon(Main.class.getResource("/img/enemy2R.gif")).getImage();
-		Game.array[9] = new ImageIcon(Main.class.getResource("/img/enemy2U.gif")).getImage();
-		Game.array[10] = new ImageIcon(Main.class.getResource("/img/enemy3D.gif")).getImage();
-		Game.array[11] = new ImageIcon(Main.class.getResource("/img/enemy3L.gif")).getImage();
-		Game.array[12] = new ImageIcon(Main.class.getResource("/img/enemy3R.gif")).getImage();
-		Game.array[13] = new ImageIcon(Main.class.getResource("/img/enemy3U.gif")).getImage();
-		Game.array[14] = new ImageIcon(Main.class.getResource("/img/p1tankD.gif")).getImage();
-		Game.array[15] = new ImageIcon(Main.class.getResource("/img/p1tankL.gif")).getImage();
-		Game.array[16] = new ImageIcon(Main.class.getResource("/img/p1tankR.gif")).getImage();
-		Game.array[17] = new ImageIcon(Main.class.getResource("/img/p1tankU.gif")).getImage();
-		Game.array[18] = new ImageIcon(Main.class.getResource("/img/p2tankD.gif")).getImage();
-		Game.array[19] = new ImageIcon(Main.class.getResource("/img/p2tankL.gif")).getImage();
-		Game.array[20] = new ImageIcon(Main.class.getResource("/img/p2tankR.gif")).getImage();
-		Game.array[21] = new ImageIcon(Main.class.getResource("/img/p2tankU.gif")).getImage();
-		Game.array[22] = new ImageIcon(Main.class.getResource("/img/tankmissile.gif")).getImage();
-	}
-
+    /** 检查游戏是否结束，如果是，则卸载当前页面 */
 	class CheckLive implements Runnable{
 		public void run(){
 			while(live){
@@ -104,7 +76,7 @@ public class Main extends JFrame {
 	}
 
     private Main() {
-		init_image();
+		Init.init_image();
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setBounds((screenSize.width-600)/3,(screenSize.height-600)/3 ,600 , 600);
@@ -132,7 +104,7 @@ public class Main extends JFrame {
 		btnNewButton.addActionListener(e ->play(1));
 		btnNewButton.setBorderPainted(false);
 		panel.add(btnNewButton);
-
+		
 		JButton btnNewButton_1 = new JButton("");
 		btnNewButton_1.setBounds(224, 298, 144, 34);
 		btnNewButton_1.setIcon(new ImageIcon(Main.class.getResource("/img/DoublePlayer.gif")));

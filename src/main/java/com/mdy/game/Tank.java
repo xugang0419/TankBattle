@@ -26,7 +26,12 @@ public class Tank extends MyImage implements Runnable{
 	private LinkedList<Coordination> IsMove = new LinkedList<>();
 	private LinkedList<Integer> Path = new LinkedList<>();
 	private LinkedList<Integer> _Path = new LinkedList<>();
-
+	
+	@Override
+	public String toString() {
+		return "Tank:"+id + ", 速度:" + speed + ", 方向:" + _direction;
+	}
+	
 	class ETankMove implements Runnable{
 		public void run(){
 			while(flag){
@@ -181,6 +186,8 @@ public class Tank extends MyImage implements Runnable{
 		}
 		return true;
 	}
+	
+	//按键处理
 	public void GetKey(int n){
 		int t_x=x;
 		int t_y=y;
@@ -252,15 +259,12 @@ public class Tank extends MyImage implements Runnable{
 				}
 			}
 		}
-		/*if(per_x!=x||per_y!=y&&Game.mode==4){
-			Game.writer.println(String.valueOf(x)+" "+String.valueOf(y)+" "+String.valueOf(_direction));
-		}*/
 		if(n==KeyEvent.VK_SHIFT&&mp>0){//子弹的初始坐标自己算
 			synchronized ("") {
 				mp-=10;
 			}
 			if(_direction==Game.UP)
-				Game.missile.add(new Missile(x+21,y-10,_direction,id));
+				Game.missile.add(new Missile(x+21,y-10,_direction,id));//创建一个子弹。参数为炮筒的末端位置
 			if(_direction==Game.DOWN)
 				Game.missile.add(new Missile(x+20,y+60,_direction,id));
 			if(_direction==Game.LEFT)
@@ -289,15 +293,16 @@ public class Tank extends MyImage implements Runnable{
 		}
 	}
 
+	/** 弹仓恢复线程。(每5秒恢复10点MP) */
 	class TankMpRecover implements Runnable{
 		public void run(){
 			while(flag){
 				synchronized ("") {
 					if(mp<Game.MP)
-						mp+=10;
+						mp+=5;
 				}
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(300);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
