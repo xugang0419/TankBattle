@@ -70,14 +70,14 @@ public class Game extends JPanel {
 
 
     /**
-     * 重回线程
+     * 重画线程
      */
     class Draw implements Runnable{
         public void run() {
             while(live){
                 repaint();
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(2);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -101,7 +101,7 @@ public class Game extends JPanel {
                     }
                 }
                 try {
-                    Thread.sleep(25);
+                    Thread.sleep(3);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -150,14 +150,7 @@ public class Game extends JPanel {
                         }
                         if(mode==3){
                         	System.out.println("坦克mode = 3");
-//                            for(Socket s:Server.getSocket()){
-//                                try {
-//                                    writer = new PrintWriter(s.getOutputStream(),true);
-//                                    writer.println("server"+" "+String.valueOf(key));
-//                                } catch (IOException e1) {
-//                                    e1.printStackTrace();
-//                                }
-//                            }
+
                         }
                     }
                 }
@@ -309,41 +302,20 @@ public class Game extends JPanel {
     public Game(int mode) {
         setForeground(Color.WHITE);
         setBackground(Color.BLACK);
-        setBounds(0, 0, 1600, 900);
+        setBounds(300, 100, 1200, 768);
         setLayout(null);
         Game.mode=mode;
-        init_map();
-        init_Tank(mode);
+        init_map();//初始化地形
+        init_Tank(mode); //初始化自己的坦克
         addKeyListener(new KeyBoardListener());
         live=true;
         new Thread(new MissileMove()).start();
         new Thread(new Draw()).start();
         if(mode==1)
-            init_ETank();
+            init_ETank();//初始化敌人的坦克
 //        if(mode==3){
 //            new Thread(new send()).start();
 //        }
     }
-
-    public Game(int mode,Socket socket) {
-        init_Tank(mode);
-        try {
-            writer = new PrintWriter(socket.getOutputStream(),true);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        writer.println(String.valueOf(MyTank.getFirst().x)+" "+String.valueOf(MyTank.getFirst().y)+" "+String.valueOf(MyTank.getFirst()._direction)+" "+String.valueOf(MyTank.getFirst().id)+" "+String.valueOf(MyTank.getFirst().offset));
-        setForeground(Color.WHITE);
-        setBackground(Color.BLACK);
-        setBounds(0, 0, 1600, 900);
-        setLayout(null);
-        Game.mode=mode;
-        //客户端网络通讯所需变量
-        init_map();
-        addKeyListener(new KeyBoardListener());
-        live=true;
-        new Thread(new MissileMove()).start();
-        new Thread(new Draw()).start();
-    }
+    
 }

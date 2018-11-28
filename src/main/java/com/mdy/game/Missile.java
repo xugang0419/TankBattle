@@ -67,15 +67,7 @@ class Missile extends MyImage{
 								Game.missile.clear();
 							}
 							else{
-//								if(Game.mode==4){
-//									Client.delTank(Game.tank.get(i));
-//									Game.tank.remove(i);
-//									if(Game.tank.size()==1){
-//										JOptionPane.showMessageDialog(null,"you win!!!");
-//										com.mdy.main.Main.live=false;
-//										Game.live=false;
-//									}
-//								}
+								System.out.println("网络对战？？");
 							}
 						}
 						else{
