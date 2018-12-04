@@ -14,6 +14,8 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
+import com.alibaba.fastjson.JSON;
+
 
 /**
  * 坦克游戏界面
@@ -34,8 +36,8 @@ public class Game extends JPanel {
     static final int HP=60;
     static final int MP=60;
     //坦克的移动区域
-    private int screenWidth =1200;
-    private int screenHeight = 900;
+    private static int screenWidth =1200;
+    private static int screenHeight = 900;
     //坦克的移动
     static final int UP=3;
     static final int DOWN=0;
@@ -98,6 +100,44 @@ public class Game extends JPanel {
             }
         }
     }
+    
+    class Rescue_EMMY implements Runnable{
+        public void run() {
+        	while(live){
+        		synchronized ("AQQ") {
+        			if(e_rescue_time1 > 0) {
+        				try {Thread.sleep(800);} catch (InterruptedException e) {e.printStackTrace();}
+        				if(--e_rescue_time1 <= 0) {
+        					init_ETank(1);
+        					e_rescue_time1 = -1;
+        				};
+        			}
+        			if(e_rescue_time2 > 0) {
+        				try {Thread.sleep(800);} catch (InterruptedException e) {e.printStackTrace();}
+        				if(--e_rescue_time2 <= 0) {
+        					init_ETank(2);
+        					e_rescue_time2 = -1;
+        				};
+        			}
+        			if(e_rescue_time3 > 0) {
+        				try {Thread.sleep(800);} catch (InterruptedException e) {e.printStackTrace();}
+        				if(--e_rescue_time3 <= 0) {
+        					init_ETank(3);
+        					e_rescue_time3 = -1;
+        				};
+        			}
+        		}
+        		try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+    			
+    		}
+        }
+    }
+    
+    
 
     /**
      * 监听按键
@@ -167,32 +207,52 @@ public class Game extends JPanel {
      * 初始化敌方坦克
      */
     static void init_ETank(){
+    	init_ETank(1);
+    	init_ETank(2);
+    	init_ETank(3);
+    	init_ETank(4);
+    }
+    
+    
+    static void init_ETank(int t_code){
+    	
         Coordination EB1 = new Coordination(height, width);
-        Coordination EB2 = new Coordination(600,600);
-        if(!ETank.containsKey(1)){
-            Tank t = new Tank(EB2.x,EB2.y,UP,enemy1,20);
+        Coordination EB2 = new Coordination(60,60);
+        if(t_code == 1 && !ETank.containsKey(1)){
+            Tank t = new Tank(EB2.x,EB2.y,DOWN,enemy1,20);
             ETank.put(1 , t);
             tank.add(t);
         }
-        if(!ETank.containsKey(2)){
-            Tank t = new Tank(400,400,DOWN,enemy2,20);
+        if(t_code == 2 && !ETank.containsKey(2)){
+            Tank t = new Tank(screenWidth/2,EB2.y,DOWN,enemy2,20);
             ETank.put(2 , t);
             tank.add(t);
         }
-        if(!ETank.containsKey(3)){
-            Tank t = new Tank(300,300,DOWN,enemy3,20);
+        if(t_code == 3 && !ETank.containsKey(3)){
+            Tank t = new Tank(screenWidth-120,EB2.y,DOWN,enemy3,20);
             ETank.put(3 , t);
             tank.add(t);
         }
-        if(!ETank.containsKey(4)){
-            Tank t = new Tank(EB1.x,EB1.y,DOWN,enemy3,20);
-            ETank.put(4 , t);
-            tank.add(t);
-        }
+//        if(!ETank.containsKey(4)){
+//            Tank t = new Tank(EB1.x,EB1.y,DOWN,enemy3,20);
+//            ETank.put(4 , t);
+//            tank.add(t);
+//        }
     }
 
+
+    static int e_rescue_time1 = -1;//敌方坦克死后，3秒再复活
+    static int e_rescue_time2 = -1;//敌方坦克死后，3秒再复活
+    static int e_rescue_time3 = -1;//敌方坦克死后，3秒再复活
+
+    
+    
+    
+
     private static void init_Tank(int mode){
-        Tank p1 = new Tank(600,100,DOWN,play1,0);
+    	System.out.println(screenWidth);//1200
+    	System.out.println(screenHeight);//900
+        Tank p1 = new Tank(600,600,UP,play1,0);
         p1.speed=20;
         p1.hp = 3000;
         p1.mp = 3000;
@@ -287,8 +347,12 @@ public class Game extends JPanel {
         live=true;
         new Thread(new MissileMove()).start();
         new Thread(new Draw()).start();
-        if(mode==1)
-            init_ETank();//初始化敌人的坦克
+        if(mode==1)init_ETank();//初始化敌人的坦克
+        
+        new Thread(new Rescue_EMMY()).start();//敌人坦克死后复活延迟
+        
+        
+        
     }
     
 }

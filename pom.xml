@@ -7,6 +7,15 @@
     <groupId>com.mdy</groupId>
     <artifactId>TankBattle</artifactId>
     <version>1.0-SNAPSHOT</version>
+    
+    <dependencies>
+	    <dependency>
+	      <groupId>com.alibaba</groupId>
+	      <artifactId>fastjson</artifactId>
+	      <version>1.2.7</version>
+	    </dependency>
+    </dependencies>
+    
     <build>
         <plugins>
             <plugin>

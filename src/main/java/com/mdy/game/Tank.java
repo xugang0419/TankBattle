@@ -13,7 +13,7 @@ public class Tank extends MyImage implements Runnable{
 
 	public int offset;
 	//敌人坦克的速度
-	int speed=15;
+	int speed=5;
 	//坦克的血量
     int hp=Game.HP;
     //坦克的射的MP
@@ -144,7 +144,7 @@ public class Tank extends MyImage implements Runnable{
 				break;
 			}
 		}
-		while(last.per!=null){
+		while(null != last && last.per!=null){
 			Path.add(last.direction);
 			last=last.per;
 		}

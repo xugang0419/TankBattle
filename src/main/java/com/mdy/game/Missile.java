@@ -37,17 +37,26 @@ class Missile extends MyImage{
 					Game.tank.get(i).hp-=damage;
 				}
 				if(Game.tank.get(i).hp<=0){
-					System.out.println("坦克"+i+"血量为"+Game.tank.get(i).hp);
+//					System.out.println("坦克"+i+"血量为"+Game.tank.get(i).hp);
 					if(Game.tank.get(i).id<12){//敌人 0，4，8 | 队友 12，16
 						//敌人血量低于0
 						Collection<Tank> coil = Game.ETank.values();
 						Iterator<Tank> it = coil.iterator();
 						while(it.hasNext()){
 							if(it.next().equals(Game.tank.get(i))){
+//								Game.init_ETank();
+								System.out.println("QQQ->"+Game.tank.get(i).id);
+								if(Game.tank.get(i).id == 0) {
+									Game.e_rescue_time1 = 3;
+								}else if(Game.tank.get(i).id == 4) {
+									Game.e_rescue_time2 = 3;
+								}else if(Game.tank.get(i).id == 8) {
+									Game.e_rescue_time3 = 3;
+								}
+								
 								Game.tank.get(i).flag=false;
 								Game.tank.remove(i);
 								it.remove();
-								Game.init_ETank();
 								break;
 							}
 						}
